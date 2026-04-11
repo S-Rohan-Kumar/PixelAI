@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from "react";
 import VideoCard from "@/components/VideoCard";
 import { Loader2, Zap, Film } from "lucide-react";
-import { Video } from "@prisma/client";
+import type { Video } from "@prisma/client";
+
 
 export default function Home() {
   const [videos, setVideos] = useState<Video[]>([]);
