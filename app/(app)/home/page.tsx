@@ -11,20 +11,28 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchVideos = async () => {
-      try {
-        const response = await fetch("/api/videos");
-        if (!response.ok) throw new Error("Failed to fetch");
-        const data = await response.json();
+  const fetchVideos = async () => {
+    try {
+      const response = await fetch("/api/videos");
+      if (!response.ok) throw new Error("Failed to fetch");
+      const data = await response.json();
+      if (Array.isArray(data)) {
         setVideos(data);
-      } catch (error) {
-        console.error("Error fetching videos:", error);
-      } finally {
-        setLoading(false);
+      } else if (Array.isArray(data.videos)) {
+        setVideos(data.videos);
+      } else {
+        console.error("API did not return an array:", data);
+        setVideos([]);
       }
-    };
-    fetchVideos();
-  }, []);
+    } catch (error) {
+      console.error("Error fetching videos:", error);
+      setVideos([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchVideos();
+}, []);
 
   const handleDownload = (url: string, title: string) => {
     const link = document.createElement("a");
